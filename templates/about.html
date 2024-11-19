@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %} Sobre Nós - Igo Vidros {% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-1">
+                <div class="card-body bg-dark rounded-4">
+                    <!-- Cabeçalho -->
+                    <div class="text-center mb-4">
+                        <img src="/static/uploads/images/129461901.jpeg" alt="Foto do Desenvolvedor" class="rounded-circle img-thumbnail" style="width: 150px; height: 150px;">
+                        <h2 class="mt-3 text-white">Mael Nunes</h2>
+                        <p class="text-white">Desenvolvedor Back-end e Criador do Sistema</p>
+                    </div>
+                    <!-- Informações pessoais -->
+                    <div class="row text-center mb-4">
+                        <div class="col-md-4">
+                            <h6 class="text-primary"><i class="bi bi-envelope-fill"></i> Contato</h6>
+                            <p class="text-white">defftunz@gmail.com</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-primary"><i class="bi bi-phone-fill"></i> Telefone</h6>
+                            <p class="text-white">(87) 99119-8909</p>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-primary"><i class="bi bi-geo-alt-fill"></i> Localização</h6>
+                            <p class="text-white">Cabrobó, PE</p>
+                        </div>
+                    </div>
+                    <!-- Redes Sociais -->
+                    <div class="text-center">
+                        <h5 class="mb-3 text-white">Redes Sociais</h5>
+                        <!-- Portfólio -->
+                        <a href="#" class="btn btn-outline-info btn-sm mx-1">
+                            <i class="bi bi-laptop"></i> Portfólio
+                        </a>
+                        <!-- WhatsApp -->
+                        <a href="#" class="btn btn-outline-success btn-sm mx-1">
+                            <i class="bi bi-telephone"></i> WhatsApp
+                        </a>
+                        <!-- Instagram -->
+                        <a href="#" class="btn btn-outline-danger btn-sm mx-1">
+                            <i class="bi bi-instagram"></i> Instagram
+                        </a>
+                        <!-- TikTok -->
+                        <a href="#" class="btn btn-outline-light btn-sm mx-1">
+                            <i class="bi bi-play-circle"></i> TikTok
+                        </a>
+                        <!-- GitHub -->
+                        <a href="#" class="btn btn-outline-secondary btn-sm mx-1">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </div>
+                    
+                    <!-- Mensagem Final -->
+                    <div class="text-center mt-4">
+                        <p class="text-white">"Transformando ideias em soluções digitais."</p>
+                        <small>&copy; 2024 Mael Nunes. Todos os direitos reservados.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

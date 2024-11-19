@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %} Vidros Temperados - Igo Vidros {% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+      <!-- Coluna do formulário -->
+      <div class="col-md-6">
+        <form action="{{ url_for('vidros_comun.vidro_t') }}" method="post">
+          {{ form.hidden_tag() }}
+          <h2 class="text-center text-light mb-4">Orçamentos</h2>
+          
+          <!-- Campo para número flutuante -->
+          <div class="mb-3">
+            <label for="numero" class="form-label text-light">Digite o tamanho</label>
+            {{ form.tamanho_01(class="form-control m-1", type="number", step="any", min="1") }}
+            {{ form.tamanho_02(class="form-control m-1", type="number", step="any", min="1") }}
+          </div>
+
+          <!-- Dropdown -->
+          <div class="mb-3">
+            <label for="dropdown" class="form-label text-light">Selecione qual o vidro</label>
+            {{ form.vidro(class="form-select") }}
+          </div>
+
+          <!-- Botão de enviar -->
+          <button type="submit" class="btn btn-primary w-100">Ver</button>
+          {% if total is not none %}
+            <h2 class="text-white">Preço: R$ <strong>{{ total }}</strong></h2>
+          {% endif %}         
+        </form>
+      </div>
+
+      <!-- Coluna da tabela -->
+      <div class="col-md-6">
+        <h2 class="text-center text-light mb-4">Tabela de Preços</h2>
+        <table class="table table-bordered table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th class="text-light">Vidro</th>
+              <th class="text-light">Preço</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-light">Porta de Correr 2v</td>
+              <td class="text-light">R$ 350,00</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td class="text-light">Porta de Correr 4v</td>
+              <td class="text-light">R$ 700,00</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td class="text-light">Janela 2v</td>
+              <td class="text-light">R$ 350,00</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td class="text-light">Janela 4v</td>
+              <td class="text-light">R$ 700,00</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td class="text-light">Porta de Abrir</td>
+              <td class="text-light">R$ 260,00</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td class="text-light">Incolor Basculhante</td>
+              <td class="text-light">R$ 190,00</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td class="text-light">Fume Basculhante</td>
+              <td class="text-light">R$ 210,00</td>
+            </tr>
+          </tbody>
+          <tbody>
+            <tr>
+              <td class="text-light">Box 2v</td>
+              <td class="text-light">R$ 350,00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <a href="{{ url_for('venda.painel_de_venda') }}" class="text-center btn btn-primary mt-4 m-3">Realizar um Pedido</a>
+{% endblock %}

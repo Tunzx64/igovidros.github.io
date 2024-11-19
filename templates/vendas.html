@@ -1,0 +1,264 @@
+{% extends "base.html" %}
+{% block title %} Painel de Vendas - Igo Vidros {% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <!-- Barra de Pesquisa -->
+    <div class="row justify-content-between align-items-center mb-3">
+        <div class="col-md-6">
+            <h2 class="text-white">Pedidos Agendados</h2>
+        </div>
+        <div class="col-md-6">
+            <form method="GET" action="{{ url_for('venda.painel_de_venda') }}" class="d-flex">
+                <input 
+                    type="text" 
+                    name="search" 
+                    class="form-control me-2" 
+                    placeholder="Pesquisar pedido..." 
+                    value="{{ request.args.get('search', '') }}">
+                <button type="submit" class="btn btn-outline-primary">Buscar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Exibição dos Pedidos -->
+    <div class="row">
+        {% for pedido in pedidos.items %}
+            {% if pedido %}
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ pedido.nome }}</h5>
+                            <p class="card-text text-muted">Pedido: {{ pedido.pedido }}</p>
+                            <p class="card-text text-muted">Status: {{ pedido.status }}</p>
+                            <p class="card-text text-muted">Bairro: {{ pedido.end_bairro }}</p>
+                            <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalPedido{{ pedido.id }}">Ver pedido</a>
+
+                            <a href="#" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#editPedidoModal{{ pedido.id }}">Editar Pedido</a>
+
+                            <a href="{{ url_for('venda.finalizar_pedido', client_id=pedido.id, client_name=pedido.nome, client_preco=pedido.preco) }}" class="btn btn-sm btn-outline-danger">Finalizar Pedido</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="col-12">
+                    <h1 class="text-center text-danger">Nenhum pedido encontrado!</h1>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="col-12">
+                <h3 class="text-center text-muted">Nenhum pedido disponível.</h3>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% for pedido in pedidos %}
+        <div class="modal fade" id="modalPedido{{ pedido.id }}" tabindex="-1" aria-labelledby="modalPedidoLabel{{ pedido.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalPedidoLabel{{ pedido.id }}">Detalhes do Pedido</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5><strong>Cliente</strong></h5>
+                        <p><strong>Nome:</strong> {{ pedido.nome }}</p>
+                        <p><strong>Pedido:</strong> {{ pedido.pedido }}</p>
+                        <p><strong>Numero:</strong> {{ pedido.numero }}</p>
+                        <p><strong>Preço:</strong> R$: {{ pedido.preco }}</p>
+                        <h5><strong>Informações sobre o Vidro</strong></h5>
+                        <p><strong>Metragem:</strong> {{ pedido.tamanho01 }} x {{ pedido.tamanho02 }}</p>
+                        <p><strong>Status:</strong> {{ pedido.status }}</p>
+                        <h5><strong>Endereço</strong></h5>
+                        <p><strong>Bairro:</strong> {{ pedido.end_bairro }}</p>
+                        <p><strong>Número da Casa:</strong> {{ pedido.end_casa_numero }}</p>
+                        <p><strong>Adicional:</strong> {{ pedido.end_adicional }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn btn-sm btn-outline-primary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <!--Model Registro de Pedidos-->
+    <div class="modal fade" id="agendarModal" tabindex="-1" aria-labelledby="agendarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agendarModalLabel">Registrar Compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulário de envio -->
+                    <form method="POST" action="{{ url_for('venda.fazer_uma_venda') }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Nome</label>
+                            {{ form.nome(class="form-control") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Número</label>
+                            {{ form.numero(class="form-control") }}
+                        </div>
+            
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Valor</label>
+                            {{ form.preco(class="form-control", type="number", step="any", min="1") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Anote o Pedido</label>
+                            {{ form.pedido(class="form-control") }}
+                        </div>
+            
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Digite o tamanho</label>
+                            {{ form.tamanho01(class="form-control m-1", type="number", step="any", min="1") }}
+                            {{ form.tamanho02(class="form-control m-1", type="number", step="any", min="1") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Status</label>
+                            {{ form.status(class="form-control") }}
+                        </div>
+                        
+                        <h5 class="text-center text-white mt-4">Endereço</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Bairro</label>
+                            {{ form.end_bairro(class="form-control") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Número da Casa</label>
+                            {{ form.end_casa_numero(class="form-control") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Adicional</label>
+                            {{ form.end_adicional(class="form-control") }}
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Agendar Pedido</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Modal para editar os Pedidos-->
+    {% for pedido in pedidos.items %}
+    <div class="modal fade" id="editPedidoModal{{ pedido.id }}" tabindex="-1" aria-labelledby="editPedidoModalLabel{{ pedido.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPedidoModalLabel{{ pedido.id }}">Editar Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Formulário para Editar Pedido -->
+                    <form method="POST" action="{{ url_for('venda.editar_produto', client_id=pedido.id) }}">
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Nome</label>
+                            <input type="text" name="nome" class="form-control" value="{{ pedido.nome }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Número</label>
+                            <input type="text" name="numero" class="form-control" value="{{ pedido.numero }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Valor</label>
+                            <input type="number" name="preco" class="form-control" value="{{ pedido.preco }}" step="any" min="1" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Pedido</label>
+                            <textarea name="pedido" class="form-control" required>{{ pedido.pedido }}</textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Tamanho</label>
+                            <input type="number" name="tamanho01" class="form-control m-1" value="{{ pedido.tamanho01 }}" step="any" min="1" required>
+                            <input type="number" name="tamanho02" class="form-control m-1" value="{{ pedido.tamanho02 }}" step="any" min="1" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Status</label>
+                            <input type="text" name="status" class="form-control" value="{{ pedido.status }}" required>
+                        </div>
+                        
+                        <h5 class="text-center text-white mt-4">Endereço</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Bairro</label>
+                            <input type="text" name="end_bairro" class="form-control" value="{{ pedido.end_bairro }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Número da Casa</label>
+                            <input type="text" name="end_casa_numero" class="form-control" value="{{ pedido.end_casa_numero }}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Adicional</label>
+                            <input type="text" name="end_adicional" class="form-control" value="{{ pedido.end_adicional }}">
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+    <!-- Paginação -->
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination">
+                {% if pedidos.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('venda.painel_de_venda', page=pedidos.prev_num, search=request.args.get('search', '')) }}">Anterior</a>
+                    </li>
+                {% endif %}
+                
+                {% for page_num in pedidos.iter_pages() %}
+                    {% if page_num %}
+                        <li class="page-item {% if pedidos.page == page_num %}active{% endif %}">
+                            <a class="page-link" href="{{ url_for('venda.painel_de_venda', page=page_num, search=request.args.get('search', '')) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pedidos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="{{ url_for('venda.painel_de_venda', page=pedidos.next_num, search=request.args.get('search', '')) }}">Próximo</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Botão para agendar pedido -->
+    <div class="text-center mt-4">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#agendarModal" class="btn btn-sm btn-outline-primary">Agendar Pedido</button>
+    </div>
+</div>
+
+
+
+{% endblock %}
